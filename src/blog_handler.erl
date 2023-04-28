@@ -9,6 +9,7 @@
 -module(blog_handler).
 -author("fluent").
 -include("../include/log.hrl").
+-include("../include/user.hrl").
 %% API
 -export([init/2, terminate/3]).
 
@@ -19,8 +20,8 @@ init(Req0, State0) ->
           add -> add(Req0, State);
           update -> update(Req0, State);
           delete -> delete(Req0, State);
-%%          query -> query(Req0);
-%%          show -> show(Req0);
+          query -> query(Req0, State);
+          display -> display(Req0);
           false -> Req0
          end,
   {ok, Req, State}.
@@ -52,3 +53,19 @@ delete(Req, State) ->
     ok -> buzz_response:success(Req);
     {error, Msg, Code} -> buzz_response:error(Req, Msg, Code)
   end.
+
+display(Req) ->
+  Blog = buzz_req_func:get_req_body(Req),
+  Payload = blog_service:display(Blog),
+  buzz_response:success(Req, Payload).
+
+query(Req, #{role := Role}) when Role =:= ?ADMIN ->
+  Blog = buzz_req_func:get_req_body(Req),
+  Payload = blog_service:query(Blog),
+  buzz_response:success(Req, Payload);
+query(Req, State) ->
+  Blog = buzz_req_func:get_req_body(Req),
+  Uid = maps:get(current_uid, State),
+  Blog1 = Blog#{<<"user_id">> => Uid},
+  Payload = blog_service:query(Blog1),
+  buzz_response:success(Req, Payload).

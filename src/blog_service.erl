@@ -13,7 +13,7 @@
 -include("../include/user.hrl").
 -include("../include/blog.hrl").
 %% API
--export([save/2, delete/3]).
+-export([save/2, delete/3, display/1, query/1]).
 
 save(#{<<"title">> := Title}, _) when byte_size(Title) =:= 0 ->
   {error, "标题不能为空", ?PARAMS_ERROR};
@@ -52,3 +52,33 @@ delete(_, Uid, #{<<"id">> := BlogId}) ->
   end;
 delete(_, _, _) ->
   {error, "请求参数为空", ?NULL_ERROR}.
+
+display(#{<<"page">> := Page, <<"size">> := Size}) when Page > 0, Size > 0 ->
+  Offset = (Page - 1) * Size,
+  Total = blog_repo:get_blog_count(),
+  case blog_repo:page(Size, Offset) of
+    {ok, _, []} ->
+      buzz_response:page_payload(Total, Page, Size, []);
+    {ok, Cols, Items} ->
+      Items2 = [lists:zipwith(fun(X, Y) -> {X, Y} end, Cols, Item) || Item <- Items],
+      buzz_response:page_payload(Total, Page, Size, Items2);
+    _ ->
+      buzz_response:page_payload(Total, Page, Size, [])
+  end;
+display(_) ->
+  buzz_response:page_payload(0, 0, 0, []).
+
+query(#{<<"page">> := Page, <<"size">> := Size, <<"user_id">> := Uid}) when Page > 0, Size > 0 ->
+  Offset = (Page - 1) * Size,
+  Total = blog_repo:get_blog_count(Uid),
+  case blog_repo:query(Size, Offset, Uid) of
+    {ok, _, []} ->
+      buzz_response:page_payload(Total, Page, Size, []);
+    {ok, Cols, Items} ->
+      Items2 = [lists:zipwith(fun(X, Y) -> {X, Y} end, Cols, Item) || Item <- Items],
+      buzz_response:page_payload(Total, Page, Size, Items2);
+    _ ->
+      buzz_response:page_payload(Total, Page, Size, [])
+  end;
+query(_) ->
+  buzz_response:page_payload(0, 0, 0, []).

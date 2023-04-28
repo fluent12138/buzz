@@ -21,7 +21,9 @@ get_routes() ->
     {"/user/refreshtoken", user_handler, #{action => rft}},
     {"/blog/add", blog_handler, #{action => add}},
     {"/blog/update", blog_handler, #{action => update}},
-    {"/blog/delete", blog_handler, #{action => delete}}
+    {"/blog/delete", blog_handler, #{action => delete}},
+    {"/blog/display", blog_handler, #{action => display}},
+    {"/blog/query", blog_handler, #{action => query}}
   ]}].
 
 %% 放开的路由
@@ -29,5 +31,6 @@ open() ->
   [
     <<"/user/register">>,
     <<"/user/login">>,
-    <<"/user/refreshtoken">>
+    <<"/user/refreshtoken">>,
+    <<"/blog/display">>
   ].
