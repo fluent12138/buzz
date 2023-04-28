@@ -13,7 +13,11 @@
 %% API
 -export([is_exist_user/2, save_user/4, login/2, change_user_status/2]).
 
-%% 返回存在用户id
+%% 判断是是否存在用户, 并视情况返回信息
+is_exist_user(Uid, NickName) when is_integer(Uid)->
+  Sql = "SELECT 1 FROM user WHERE id = (?) AND nickname = (?)",
+  {ok, _, Res}  = mysql_pool:query(Sql, [Uid, NickName]),
+  Res;
 is_exist_user(UserName, NickName) ->
   Sql1 = "SELECT id FROM user WHERE username = (?)",
   Sql2 = "SELECT id FROM user WHERE nickname = (?)",

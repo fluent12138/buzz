@@ -31,17 +31,15 @@ condition(_, Auth, Req, Env) ->
   do_authorization(Auth, Req, Env).
 
 %% 鉴权
-do_authorization(undefined, Req, _Env) ->
-  {stop, Req};
 do_authorization(Auth, Req, Env) ->
   case token_func:decrypt_token(Auth) of
-    {ok, Id, _ExpireAt, <<"tk">>} when is_integer(Id) ->
+    {ok, Id, Role, _ExpireAt, <<"tk">>} when is_integer(Id) ->
       #{handler_opts := HandlerOpts} = Env,
-      Env2 = Env#{handler_opts := HandlerOpts#{current_uid => Id}},
+      Env2 = Env#{handler_opts := HandlerOpts#{current_uid => Id, role => Role}},
       {ok, Req, Env2};
-    {ok, Id, _ExpireAt, <<"tk">>} when is_binary(Id) ->
+    {ok, Id, Role, _ExpireAt, <<"tk">>} when is_binary(Id) ->
       #{handler_opts := HandlerOpts} = Env,
-      Env2 = Env#{handler_opts := HandlerOpts#{current_uid => Id}},
+      Env2 = Env#{handler_opts := HandlerOpts#{current_uid => Id, role => Role}},
       {ok, Req, Env2};
     {ok, _Id, _ExpireAt, <<"rtk">>} ->
       Err = "Does not support refreshtoken",

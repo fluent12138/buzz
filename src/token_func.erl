@@ -16,12 +16,12 @@
 -type token_type() :: rtk | tk.
 
 %% 生成refreshtoken
-encrypt_refreshtoken(ID) ->
-  encrypt_token(ID, ?REFRESHTOKEN_VALID, rtk).
+encrypt_refreshtoken(Info) ->
+  encrypt_token(Info, ?REFRESHTOKEN_VALID, rtk).
 
 %% 生成token
-encrypt_token(ID) ->
-  encrypt_token(ID, ?TOKEN_VALID, tk).
+encrypt_token(Info) ->
+  encrypt_token(Info, ?TOKEN_VALID, tk).
 
 %% 解析token
 decrypt_token(Token) ->
@@ -30,10 +30,11 @@ decrypt_token(Token) ->
   of
     {ok, Payload} ->
       Uid = maps:get(uid, Payload, 0),
+      Role = maps:get(role, Payload, 0),
       ID = Uid,
       ExpireAt = maps:get(exp, Payload, 0),
       Sub = maps:get(sub, Payload, 0),
-      {ok, ID, ExpireAt, Sub};
+      {ok, ID, Role, ExpireAt, Sub};
     {error, _JWT_ERR} ->
       {error, ?EXPIRED_ERROR, "请刷新token", []};
     _JWT_ERR ->
@@ -49,20 +50,38 @@ decrypt_token(Token) ->
 
 %% 生成token
 -spec encrypt_token(iodata(), integer(), token_type()) -> any().
+encrypt_token(Info, Millisecond, Sub) when is_map(Info)->
+  ID = maps:get(id, Info),
+  case maps:is_key(role, Info) of
+    false -> encrypt_token(ID, Millisecond, Sub);
+    true ->
+      Role = maps:get(role, Info),
+      encrypt_token(ID, Role, Millisecond, Sub)
+  end;
+
 encrypt_token(ID, Millisecond, Sub) when is_integer(ID) ->
   ID2 = integer_to_binary(ID),
   encrypt_token(ID2, Millisecond, Sub);
-encrypt_token(ID, Millisecond, Sub) ->
+
+encrypt_token(ID, Millisecond, Sub)->
   ExpireAt = millisecond() + Millisecond,
   Data = #{
-    % iss => buzz  % iss (issuer)：签发人
-    % , nbf => Now + 1 % nbf (Not Before)：生效时间
-    % , iat => Now % iat (Issued At)：签发时间
-    sub => Sub  % sub (subject)：主题
-    ,
-    exp => ExpireAt  % exp (expiration time)：过期时间
-    ,
+    sub => Sub,
+    exp => ExpireAt,
     uid => ID},
+  jwerl:sign(Data, hs256, ?JWT_KEY).
+
+encrypt_token(ID, Role, Millisecond, Sub) when is_integer(ID) ->
+  ID2 = integer_to_binary(ID),
+  encrypt_token(ID2, Role, Millisecond, Sub);
+
+encrypt_token(ID, Role, Millisecond, Sub)->
+  ExpireAt = millisecond() + Millisecond,
+  Data = #{
+    sub => Sub,
+    exp => ExpireAt,
+    uid => ID,
+    role => Role},
   jwerl:sign(Data, hs256, ?JWT_KEY).
 
 millisecond() ->

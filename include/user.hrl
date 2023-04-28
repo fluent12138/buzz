@@ -9,6 +9,7 @@
 %% user status
 -define(ONLINE, 1).
 -define(OFFLINE, 0).
-
+-define(ADMIN, <<"1">>).
+-define(USER, <<"0">>).
 %% sql
 -define(USERINFO_COL, <<"id, nickname, username, avatar, gender, role ">>).

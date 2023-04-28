@@ -74,10 +74,12 @@ refreshtoken(_) ->
   {error, "请重新登录", ?PARAMS_ERROR}.
 
 generate_userinfo([Id, NickName, UserName, Avatar, Gender, Role]) ->
+  TokenInfo = #{id => Id, role => integer_to_binary(Role)},
+  RefreshTokenInfo = #{id => Id},
   {ok,
     [
-      {<<"token">>, token_func:encrypt_token(Id)},
-      {<<"refreshtoken">>, token_func:encrypt_refreshtoken(Id)},
+      {<<"token">>, token_func:encrypt_token(TokenInfo)},
+      {<<"refreshtoken">>, token_func:encrypt_refreshtoken(RefreshTokenInfo)},
       {<<"uid">>, Id},
       {<<"nickname">>, NickName},
       {<<"avatar">>, Avatar},

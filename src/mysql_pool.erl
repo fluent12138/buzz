@@ -146,7 +146,7 @@ update(Table, ID, KV) ->
   Set3 = lists:concat(lists:join(", ", Set2)),
   Set4 = list_to_binary(Set3),
   Sql = <<"UPDATE `", Table/binary,"` SET ", Set4/binary," WHERE `id` = ?">>,
-  % ?LOG(io:format("~s\n", [Sql])),
+%%  ?LOG(io:format("~s\n", [Sql])),
   mysql_pool:query(Sql, [ID]).
 
 %% ------------------------------------------------------------------

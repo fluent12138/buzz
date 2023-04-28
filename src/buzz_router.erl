@@ -18,7 +18,10 @@ get_routes() ->
     {"/user/register", user_handler, #{action => register}},
     {"/user/login", user_handler, #{action => login}},
     {"/user/logout", user_handler, #{action => logout}},
-    {"/user/refreshtoken", user_handler, #{action => rft}}
+    {"/user/refreshtoken", user_handler, #{action => rft}},
+    {"/blog/add", blog_handler, #{action => add}},
+    {"/blog/update", blog_handler, #{action => update}},
+    {"/blog/delete", blog_handler, #{action => delete}}
   ]}].
 
 %% 放开的路由
