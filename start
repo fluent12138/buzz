@@ -1,0 +1,2 @@
+erl -config ./config/sys -args_file vm.args
+

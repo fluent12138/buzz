@@ -1,0 +1,34 @@
+{"1.2.0",
+[{<<"cowboy">>,{pkg,<<"cowboy">>,<<"2.9.0">>},0},
+ {<<"cowlib">>,{pkg,<<"cowlib">>,<<"2.11.0">>},1},
+ {<<"jsone">>,
+  {git,"https://gitee.com/imboy-tripartite-deps/jsone",
+       {ref,"5b8a8581743e5975f1b4062f768cff1e75ee39ef"}},
+  0},
+ {<<"jsx">>,
+  {git,"https://gitee.com/imboy-tripartite-deps/jsx",
+       {ref,"fc2a001073f2300ba38427c23e83d5673c020542"}},
+  0},
+ {<<"jwerl">>,
+  {git,"https://github.com/G-Corp/jwerl",
+       {ref,"6e778543ef7470e9e8ae32700f5e5a8cc25e00a4"}},
+  0},
+ {<<"mysql">>,
+  {git,"https://gitee.com/imboy-tripartite-deps/mysql-otp",
+       {ref,"6b089f9c273771310d3a491fa33de0c0eddf0a33"}},
+  0},
+ {<<"poolboy">>,
+  {git,"https://gitee.com/imboy-tripartite-deps/poolboy",
+       {ref,"29be47db8c2be38b18c908e43a80ebb7b9b6116b"}},
+  0},
+ {<<"ranch">>,{pkg,<<"ranch">>,<<"1.8.0">>},1}]}.
+[
+{pkg_hash,[
+ {<<"cowboy">>, <<"865DD8B6607E14CF03282E10E934023A1BD8BE6F6BACF921A7E2A96D800CD452">>},
+ {<<"cowlib">>, <<"0B9FF9C346629256C42EBE1EEB769A83C6CB771A6EE5960BD110AB0B9B872063">>},
+ {<<"ranch">>, <<"8C7A100A139FD57F17327B6413E4167AC559FBC04CA7448E9BE9057311597A1D">>}]},
+{pkg_hash_ext,[
+ {<<"cowboy">>, <<"2C729F934B4E1AA149AFF882F57C6372C15399A20D54F65C8D67BEF583021BDE">>},
+ {<<"cowlib">>, <<"2B3E9DA0B21C4565751A6D4901C20D1B4CC25CBB7FD50D91D2AB6DD287BC86A9">>},
+ {<<"ranch">>, <<"49FBCFD3682FAB1F5D109351B61257676DA1A2FDBE295904176D5E521A2DDFE5">>}]}
+].

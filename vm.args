@@ -1,0 +1,10 @@
+-pa _build/default/lib/buzz/ebin
+-pa _build/default/lib/ranch/ebin
+-pa _build/default/lib/cowlib/ebin
+-pa _build/default/lib/cowboy/ebin
+-pa _build/default/lib/jsx/ebin
+-pa _build/default/lib/jsone/ebin
+-pa _build/default/lib/mysql/ebin
+-pa _build/default/lib/poolboy/ebin
+-pa _build/default/lib/jwerl/ebin
+-eval "application:start(buzz)"
