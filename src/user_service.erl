@@ -13,7 +13,7 @@
 -include("../include/error.hrl").
 -include("../include/user.hrl").
 %% API
--export([do_register/1, do_login/1, do_logout/1]).
+-export([do_register/1, do_login/1, do_logout/1, refreshtoken/1]).
 
 do_register(#{<<"nickname">> := NickName}) when byte_size(NickName) < 4; byte_size(NickName) > 16 ->
   {error, "昵称长度小于4或大于16", ?PARAMS_ERROR};
@@ -61,6 +61,17 @@ do_login(_) ->
 do_logout(State) ->
   ID = maps:get(current_uid, State),
   user_repo:change_user_status(ID, ?OFFLINE).
+
+refreshtoken(#{<<"rft">> := RefreshToken}) ->
+  case token_func:decrypt_token(RefreshToken) of
+    {ok, Id, _ExpireAt, <<"rtk">>} ->
+      Data = [{<<"token">>, token_func:encrypt_token(Id)}],
+      {ok, Data};
+    {error, Code, Msg, _Map} ->
+      {error, Msg, Code}
+  end;
+refreshtoken(_) ->
+  {error, "请重新登录", ?PARAMS_ERROR}.
 
 generate_userinfo([Id, NickName, UserName, Avatar, Gender, Role]) ->
   {ok,

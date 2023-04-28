@@ -16,14 +16,15 @@ init(Req0, State0) ->
   Action = maps:get(action, State0),
   State = maps:remove(action, State0),
   Req = case Action of
-          register -> user_register(Req0, State);
+          register -> user_register(Req0);
           login -> user_login(Req0, State);
           logout -> user_logout(Req0, State);
+          rft -> user_refreshtoken(Req0);
           false -> Req0
          end,
   {ok, Req, State}.
 
-user_register(Req, _State) ->
+user_register(Req) ->
   Data = buzz_req_func:get_req_body(Req),
   case user_service:do_register(Data) of
     ok -> buzz_response:success(Req);
@@ -40,6 +41,13 @@ user_login(Req, _State) ->
 user_logout(Req, State) ->
   user_service:do_logout(State),
   buzz_response:success(Req).
+
+user_refreshtoken(Req) ->
+  Data = buzz_req_func:get_req_body(Req),
+  case user_service:refreshtoken(Data) of
+    {error, Msg, Code} -> buzz_response:error(Req, Msg, Code);
+    {ok, Token} -> buzz_response:success(Req, Token)
+  end.
 
 terminate(_Reason, _Req, _State) ->
   ok.

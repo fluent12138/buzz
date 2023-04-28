@@ -10,6 +10,7 @@
 -author("fluent").
 -include("../include/user.hrl").
 -include("../include/log.hrl").
+-include("../include/error.hrl").
 %% API
 -export([encrypt_refreshtoken/1, encrypt_token/1, decrypt_token/1]).
 -type token_type() :: rtk | tk.
@@ -34,12 +35,12 @@ decrypt_token(Token) ->
       Sub = maps:get(sub, Payload, 0),
       {ok, ID, ExpireAt, Sub};
     {error, _JWT_ERR} ->
-      {error, 705, "请刷新token", []};
+      {error, ?EXPIRED_ERROR, "请刷新token", []};
     _JWT_ERR ->
-      {error, 706, "token无效", []}
+      {error, ?NO_AUTH, "token无效", []}
   catch
     _:_ ->
-      {error, 706, "token无效", []}
+      {error, ?NO_AUTH, "token无效", []}
   end.
 
 %% ------------------------------------------------------------------

@@ -17,12 +17,14 @@ get_routes() ->
   [{HostBuzz, [
     {"/user/register", user_handler, #{action => register}},
     {"/user/login", user_handler, #{action => login}},
-    {"/user/logout", user_handler, #{action => logout}}
+    {"/user/logout", user_handler, #{action => logout}},
+    {"/user/refreshtoken", user_handler, #{action => rft}}
   ]}].
 
 %% 放开的路由
 open() ->
   [
     <<"/user/register">>,
-    <<"/user/login">>
+    <<"/user/login">>,
+    <<"/user/refreshtoken">>
   ].

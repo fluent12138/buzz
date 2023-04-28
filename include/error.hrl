@@ -11,4 +11,5 @@
 -define(NULL_ERROR, 40001).
 -define(NOT_LOGIN, 40100).
 -define(NO_AUTH, 40101).
+-define(EXPIRED_ERROR, 40102).
 -define(SYSTEM_ERROR, 50000).
